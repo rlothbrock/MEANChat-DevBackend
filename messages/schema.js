@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
     room: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: [true,'please define a room for sending messages']
     },
     from: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: [true,'a message needs a sender']
     },
     to: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [String],
         required: [true,'a message needs a destinatary']
     },
     text: {
