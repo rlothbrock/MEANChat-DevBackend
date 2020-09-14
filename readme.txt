@@ -1,5 +1,7 @@
 this server implements real time communication using socket.io
 
+APIS:
+auth:
 
 -----------
 dev notes:
@@ -15,7 +17,119 @@ room: [ObjectId] // parent reference
 text:  String
 date: Date def. D.now
 
-apis:
-rooms:
-createRoom -> 
-    require memebrs on: req.body.members
+APIS: /api/v1
+
+api response on production: json {
+	status: string ('success'| 'fail' | 'error')
+		fail: 	operational errors
+		error: 	non operational errors
+	data: 		{ data: object}
+	message?: 	string
+	count?: 	number  -> number of docs on data 
+} 
+Resource auth: /portal
+        route: /new-user
+            description: handles user sign up process
+            post = body-val (joi), controller.signup
+                require from req.body: 
+                        username
+                        email
+                        password
+                        role ? // must implement another way
+
+            return reponse with token
+
+        route: /login
+            description: handles user sign in process
+            post = body-val(joi), controller.signin
+                require from req.body
+                        email
+                        password
+
+                return response with token
+
+        route: /recovery
+            description: handles user account recovery process on pass forgotten		
+            post = body-val (joi), controller. passwordForgotten
+                require from req.body:
+                    email
+                return empty response with a void message
+                sends a email with url for recovering password
+
+        router: /reset-password/:token
+            description: handles user password changing process
+            patch = controller.passwordRecovery
+                require from req.params
+                    token
+
+                return response with user.id, token
+Resource users: /users
+        route: /Me
+        description: get the currently logged user profile data (public data)
+            post = body-val (joi), controller.signup
+                require from req.body: 
+                        username
+                        email
+                        password
+                        role ? // must implement another way
+        	* made with factory
+
+
+        route: /Me/update-password
+        description: hanldes the password changing process for a logged user
+        	*protected with route guard
+        	patch = controller.passwordUpdating
+        	require from req.body :
+        				oldPassword, 
+        				updatedPassword
+        			from req.headers.auth
+        				token
+
+        	returns token
+
+        route: /Me/update-profile
+        description: handles the profile info updating process
+        	*protected with route guard
+        	patch = controller.profileUpdating
+        	require from: 
+            * denies access if password provided or email
+        	returns data message
+
+        route: /Me/delete-profile
+        description: handles the profile info deleting process
+        	delete = controller.profileDeleting
+        	*protected with route guard
+        	require from:
+        	returns none
+
+        route: /
+        description: allows getting all registered users. admin only
+        	*protected with route guard
+        	*protected with admin middleware
+			post = body-val(joi). controller.postUser        	
+        	require from:
+        	returns 
+        	* made with factory
+
+        route: /:id
+        description: allow getting a single user by its id. admin only
+        	*protected with route guard
+        	*protected with admin middleware
+        	get = controller.getUser
+        	require from:
+        	returns
+        	* made with factory
+
+
+	      	patch = controller.patchUser
+        	require from:
+        	returns
+        	* made with factory
+
+
+        	delete = controller.deleteUser
+        	require from:
+        	returns
+        	* made with factory
+Resource rooms: /rooms
+Resource messages: /messages			
