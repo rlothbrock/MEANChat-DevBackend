@@ -4,5 +4,4 @@ config.env
 /temp
 /utils/error handling/combined.log
 /logs/uncaught-exceptions.log
-/logs/unhandled-rejections.log
 /logs/combined.log
