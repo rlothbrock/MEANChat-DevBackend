@@ -1,6 +1,6 @@
-const { catchAsync } = require("../error handling/catchAsync");
-const notFoundError = require("../error handling/_404");
-const { message } = require("../error handling/_404");
+const { catchAsync } = require("../error.handling/catchAsync");
+const notFoundError = require("../error.handling/_404");
+const { message } = require("../error.handling/_404");
 const { options } = require("joi");
 
 

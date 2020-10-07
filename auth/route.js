@@ -4,24 +4,25 @@ const { signup, signin } = require('./handler');
 const { User, joiSchema } = require('../users/schema');
 const { passwordForgotten, passwordRecovery } = require('../middleware/route-guard-middle');
 
-const router = express.Router();
+
+const route = express.Router();
 
 
-router
+route
 .route('/new-user')
 .post(bodyValidator(joiSchema),signup)
 
-router
+route
 .route('/login')
 .post(bodyValidator(joiSchema),signin)
 
-router
+route
 .route('/recovery')
 .post(bodyValidator(joiSchema), passwordForgotten)
 
-router
+route
 .route('/reset-password/:token')
 .patch(passwordRecovery)
 
 
-module.exports = router;
+module.exports = route;

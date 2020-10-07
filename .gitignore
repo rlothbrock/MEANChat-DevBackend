@@ -2,6 +2,6 @@
 /.vscode
 config.env
 /temp
-/utils/error handling/combined.log
+/utils/error.handling/combined.log
 /logs/uncaught-exceptions.log
 /logs/combined.log

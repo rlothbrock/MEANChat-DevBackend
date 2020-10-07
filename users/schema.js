@@ -1,3 +1,8 @@
+// const childSchema = new Schema({ parentId: mongoose.ObjectId });
+// The Mongoose ObjectId SchemaType.
+// Used for declaring paths in your schema that should be MongoDB ObjectIds.
+// Do not use this to create a new ObjectId instance, use mongoose.Types.ObjectId instead.
+ 
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -43,13 +48,24 @@ const joiLoginSchema = Joi.object({
     .trim()
 })
 
-const joiSchema = Joi.alternatives([joiUserSchema,joiLoginSchema, joiRecoverSchema])
+const joiContactsArraySchema = Joi.object({
+    newContacts: Joi.array().min(1)
+});
+const joiSchema = Joi.alternatives([
+    joiUserSchema,
+    joiLoginSchema,
+    joiRecoverSchema,
+    joiContactsArraySchema])
 
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     photo:{
         type: String,
         default: 'user-default.png'
+    },
+    tokenExpiration:{
+        type: Date,
+        default: new Date(Date.now()+ 90*24*60*60*1000) 
     },
     active:{
         type: Boolean,
@@ -98,7 +114,8 @@ const UserSchema = new mongoose.Schema({
     },
     resetTokenExpiration:{
         type: Date,
-    }
+    },
+    contacts:[this]
 
 })
 
@@ -135,10 +152,10 @@ const UserSchema = new mongoose.Schema({
 //     await this.temp.constructor.countContacts(this.temp._id)
 // })
 
-UserSchema.methods.verifyPassword = async function(candidate){
+userSchema.methods.verifyPassword = async function(candidate){
     return await bcrypt.compare(candidate, this.password)
 };
-UserSchema.methods.hasSamePasswordSince = async function(timestamp){ 
+userSchema.methods.hasSamePasswordSince = async function(timestamp){ 
     // timestamp must be multiplied by 1000 if used the default iat when constructing tokens
         if (this.passwordChangedAt){
             const lastChangeAt = this.passwordChangedAt.getTime()
@@ -146,7 +163,7 @@ UserSchema.methods.hasSamePasswordSince = async function(timestamp){
         };
         return true
 };
-UserSchema.methods.createResetToken = function(){
+userSchema.methods.createResetToken = function(){
         const _resetToken = crypto.randomBytes(64).toString('hex');
         this.resetToken = crypto.createHash('sha256').update(_resetToken).digest('hex');
         this.resetTokenExpiration = Date.now() + 10 * 60 * 1000;
@@ -154,7 +171,47 @@ UserSchema.methods.createResetToken = function(){
         return _resetToken;
 };
 
-UserSchema.pre('save',async function (next) {
+userSchema.statics.manageContacts = async function(id, emails,options){
+    // const condition = emails.map(element => { 
+    //     return { email : { $eq: element } } 
+    // });
+    let newContacts = await this.aggregate([
+        {
+            // $match: { $or : condition }
+            $match: { email : { $in: emails } }
+        },{
+            $project: { _id: true }
+        }
+    ])
+    newContacts = newContacts.map(contacts => contacts._id)
+    if (options.action === 'add'){
+        return await this.findByIdAndUpdate(
+            id,
+            { 
+                $addToSet : { 
+                    contacts: { 
+                        $each: newContacts
+                    } 
+                } 
+            },
+            {
+                new: true,
+                runValidators: true
+            })
+    }
+    else if (options.action === 'delete'){
+       await this.findByIdAndUpdate(id,{
+         $pull: { contacts: { $in : newContacts } }
+        },{
+          new: true,
+          runValidators: true
+        })
+    }
+   return 
+}
+
+
+userSchema.pre('save',async function (next) {
     if (!this.isModified('password') ) return next();
 
     this.passwordChangedAt = Date.now()-2000 ; // two seconds, in case of latency
@@ -162,13 +219,14 @@ UserSchema.pre('save',async function (next) {
     next()
 })
 
-UserSchema.pre(/^find/,function(next){
+userSchema.pre(/^find/,function(next){
     this.find({active: true});
     next()
 })
 
 
-const User = mongoose.model('users',UserSchema)
+const User = mongoose.model('User',userSchema);
 
 module.exports.joiSchema = joiSchema;
 module.exports.User = User;
+

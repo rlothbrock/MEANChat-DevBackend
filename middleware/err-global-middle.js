@@ -1,4 +1,4 @@
-const AppError = require('../utils/error handling/appError');
+const AppError = require('../utils/error.handling/appError');
 
 // error response env-based handlers
 function sendDevErr(err, res) {

@@ -3,17 +3,18 @@ const jwt = require('jsonwebtoken');
 const sharp = require('sharp');
 const path = require('path');
 
-const AppError = require('../utils/error handling/appError');
-const lackOfPermissionsError = require('../utils/error handling/_401');
-const illegalDataError = require('../utils/error handling/_400.illegal');
-const notFoundError = require('../utils/error handling/_404');
-//const badRequestError = require('../../utils/error handling/_400');
+const AppError = require('../utils/error.handling/appError');
+const lackOfPermissionsError = require('../utils/error.handling/_401');
+const illegalDataError = require('../utils/error.handling/_400.illegal');
+const notFoundError = require('../utils/error.handling/_404');
+//const badRequestError = require('../../utils/error.handling/_400');
 
-const createHandlerFor = require('../utils/route tools/handlersFactory');
-const {tokenCreator} = require('../utils/route tools/tokenCreator');
+const createHandlerFor = require('../utils/route.tools/handlersFactory');
+const {tokenCreator} = require('../utils/route.tools/tokenCreator');
 const { User } = require('./schema');
-const { catchAsync } = require('../utils/error handling/catchAsync');
-const { bodyFilter } = require('../utils/route tools/bodyFilter');
+const { catchAsync } = require('../utils/error.handling/catchAsync');
+const { bodyFilter } = require('../utils/route.tools/bodyFilter');
+const badRequestError = require('../utils/error.handling/_400');
 
 async function imageResizing(req, res, next){
     try {    
@@ -126,14 +127,54 @@ function useTokenForSetParams(req, res, next){
     req.params.id = req.user._id
     next()
 }
+
+async function addContacts(req, res, next){
+    const { newContacts } = req.body;
+    if (!newContacts || typeof(newContacts) !== typeof([]) || newContacts.length === 0){
+        return next(badRequestError);
+    }
+    const contacts = await User.manageContacts(
+        req.user._id,
+        newContacts,
+        {action: 'add'}
+    );  
+    return res.status(200).json({
+        status: 'success',
+        data: { data: contacts },
+        message: 'contacts successfully updated'
+    });
+}
+
+async function deleteContacts(req, res, next){
+    const { deletedContacts } = req.body;
+    if (!deletedContacts || typeof(deletedContacts) !== typeof([]) || deletedContacts.length === 0){
+        return next(badRequestError);
+    }
+    const contacts = await User.manageContacts(
+        req.user._id,
+        deletedContacts,
+        {action: 'delete'}
+    );
+    return res.status(204).json({
+        message: 'contacts deleted successfully',
+        data: {data: contacts}
+    })
+}
+
+
 //catchAsync wraps the try-catch block logic
 module.exports.passwordUpdating = catchAsync(passwordUpdating);
+module.exports.contactsUpdating = catchAsync(addContacts);
+module.exports.contactsDeleting = catchAsync(deleteContacts);
 module.exports.profileUpdating = catchAsync(profileUpdating);
 module.exports.profileDeleting = catchAsync(profileDeleting);
 module.exports.useTokenForSetParams = useTokenForSetParams;
-module.exports.getMe = createHandlerFor.getOne(User,{message:'user successfully sent'});
-module.exports.getUser = createHandlerFor.getOne(User,{message:'user successfully sent'});
-module.exports.getUsers = createHandlerFor.getMany(User,{message: 'users sent !!'});
+module.exports.getMe = createHandlerFor.getOne(User,{
+    message:'user successfully sent',
+    populate:{path: 'contacts', select:'photo username email'}
+});
+module.exports.getUser = createHandlerFor.getOne(User,{message:'user successfully sent',populate:{path: 'contacts', select:'photo username'}});
+module.exports.getUsers = createHandlerFor.getMany(User,{message: 'users sent !!',populate:{path: 'contacts', select:'photo username'}});
 module.exports.postUser = createHandlerFor.postOne(User,{message:'user created successfully'});
 module.exports.patchUser = createHandlerFor.patchOne(User,{message:'changes saved succesfully'});
 module.exports.deleteUser = createHandlerFor.deleteOne(User,{message: 'user deleted succesfully'});

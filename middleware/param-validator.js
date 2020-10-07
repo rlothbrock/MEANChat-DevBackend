@@ -1,6 +1,6 @@
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi)
-const { catchAsync } = require('../utils/error handling/catchAsync');
+const { catchAsync } = require('../utils/error.handling/catchAsync');
 
 const paramSchema = Joi.object({
     id:Joi.objectId()

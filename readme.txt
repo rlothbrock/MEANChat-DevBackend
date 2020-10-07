@@ -66,16 +66,11 @@ Resource auth: /portal
 Resource users: /users
         route: /Me
         description: get the currently logged user profile data (public data)
-            post = body-val (joi), controller.signup
-                require from req.body: 
-                        username
-                        email
-                        password
-                        role ? // must implement another way
+            /// ?????
         	* made with factory
 
 
-        route: /Me/update-password
+        route: /Me/password
         description: hanldes the password changing process for a logged user
         	*protected with route guard
         	patch = controller.passwordUpdating
@@ -87,7 +82,7 @@ Resource users: /users
 
         	returns token
 
-        route: /Me/update-profile
+        route: /Me/profile
         description: handles the profile info updating process
         	*protected with route guard
         	patch = controller.profileUpdating
@@ -95,12 +90,21 @@ Resource users: /users
             * denies access if password provided or email
         	returns data message
 
-        route: /Me/delete-profile
+        route: /Me/profile
         description: handles the profile info deleting process
         	delete = controller.profileDeleting
         	*protected with route guard
         	require from:
         	returns none
+        
+        route('/Me/contacts')
+        	*protected with route guard
+        description: handles the contacts field, so far allows add and delete
+                     requires in the body an array with the emails to add-delete
+                     this api returns the user object with the modified contacts field
+            patch(contactsUpdating) : use patch for add new contacts
+            delete(contactsDeleting): use delete for removing contacts
+
 
         route: /
         description: allows getting all registered users. admin only

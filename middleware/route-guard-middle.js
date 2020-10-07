@@ -2,11 +2,11 @@ const { promisify } = require('util');
 const jwt = require("jsonwebtoken");
 const crypto = require('crypto');
 
-const { catchAsync } = require("../utils/error handling/catchAsync");
-const AppError = require("../utils/error handling/appError");
+const { catchAsync } = require("../utils/error.handling/catchAsync");
+const AppError = require("../utils/error.handling/appError");
 const { User } = require('../users/schema');
 const {sendEmail} = require('../utils/mailer');
-const { tokenCreator } = require('../utils/route tools/tokenCreator');
+const { tokenCreator } = require('../utils/route.tools/tokenCreator');
 
 async function routeGuard(req, res, next){
     // the err message is the same on purpose

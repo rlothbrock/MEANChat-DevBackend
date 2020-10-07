@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 
-const AppError = require('../utils/error handling/appError');
+const AppError = require('../utils/error.handling/appError');
 
 const { User } = require('../users/schema'); 
-const { catchAsync } = require('../utils/error handling/catchAsync');
-const { tokenCreator } = require('../utils/route tools/tokenCreator');
+const { catchAsync } = require('../utils/error.handling/catchAsync');
+const { tokenCreator } = require('../utils/route.tools/tokenCreator');
 
 function tokenSender(user, statusCode, res) {
     const token = tokenCreator(user._id); 
