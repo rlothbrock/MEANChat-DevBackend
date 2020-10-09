@@ -13,6 +13,8 @@ const {
 const {paramValidator} = require('../middleware/param-validator');
 const { bodyValidator } = require('../middleware/body-validator');
 const { routeGuard, allowOnly } = require('../middleware/route-guard-middle');
+const { upload } = require('./../utils/fileUploader'); 
+
 
 route.param('id',paramValidator)
 
@@ -29,7 +31,7 @@ route
 
 route
 .route('/Me/profile')
-.patch(profileUpdating)
+.patch(upload.single('file'),profileUpdating)
 .delete(profileDeleting)
 
 route

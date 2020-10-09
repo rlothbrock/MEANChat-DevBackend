@@ -1,71 +1,20 @@
 const {promisify} = require('util');
 const jwt = require('jsonwebtoken');
-const sharp = require('sharp');
-const path = require('path');
+
 
 const AppError = require('../utils/error.handling/appError');
 const lackOfPermissionsError = require('../utils/error.handling/_401');
 const illegalDataError = require('../utils/error.handling/_400.illegal');
 const notFoundError = require('../utils/error.handling/_404');
-//const badRequestError = require('../../utils/error.handling/_400');
-
+const badRequestError = require('./../utils/error.handling/_400');
 const createHandlerFor = require('../utils/route.tools/handlersFactory');
 const {tokenCreator} = require('../utils/route.tools/tokenCreator');
 const { User } = require('./schema');
 const { catchAsync } = require('../utils/error.handling/catchAsync');
 const { bodyFilter } = require('../utils/route.tools/bodyFilter');
-const badRequestError = require('../utils/error.handling/_400');
+const { upload } = require('../utils/fileUploader');
 
-async function imageResizing(req, res, next){
-    try {    
-        if (!req.file) return next();
-        req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`;
-        
-        await sharp(req.file.buffer)
-        .resize(200,200)
-        .toFormat('jpeg')
-        .jpeg({quality: 90})
-        .toFile(path.join(__dirname,'../../static/img',req.file.filename));
-        next();
-    } catch (error) {
-        return new AppError('oops....',500);
-    }
-};
 
-async function multipleImagesResizing(req, res, next){
-    if (!req.files) return next();
-
-    //1) single image field
-        const resourceImageName = `resourceName-${req.params.id}-${Date.now()}-imagePurpose.jpeg`;
-
-        await sharp(req.files.fieldName[0].buffer)
-        .resize(2000,1333)
-        .toFormat('jpeg')
-        .jpeg({quality: 90})
-        .toFile(path.join(__dirname,'../../static/img',resourceImageName));
-
-        req.body.fieldName = resourceImageName;
-        
-    //2) multiple image field
-        req.body.fieldmultiName = [];
-        const pendingImages = req.files.fieldmultiName.map(async (file,index) =>{
-            const resourceImageName = `resourceName-${req.params.id}-${Date.now()}-imagePurpose${index+1}.jpeg`;
-
-            await sharp(file.buffer)
-            .resize(2000,1333)
-            .toFormat('jpeg')
-            .jpeg({quality: 90})
-            .toFile(path.join(__dirname,'../../static/img',resourceImageName));
-        
-            req.fieldmultiName.push(resourceImageName);
-        });
-
-        await Promise.all(pendingImages);
-        next()
-
-     
-
-};
 
 async function passwordUpdating(req, res, next){
     
@@ -98,7 +47,7 @@ async function passwordUpdating(req, res, next){
 async function profileUpdating(req, res, next){
     // not allowed for password role or email, or any other sensitive field
     if (req.body.password || req.body.role || req.body.email ) return next(illegalDataError)
-    let filtered = bodyFilter(req,'username');
+    let filtered = bodyFilter(req,'username', 'photo');
     if (req.file) filtered.photo = req.file.name;
     
     const updatedUser = await User.findByIdAndUpdate(
