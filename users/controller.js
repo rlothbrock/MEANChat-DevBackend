@@ -122,8 +122,8 @@ module.exports.getMe = createHandlerFor.getOne(User,{
     message:'user successfully sent',
     populate:{path: 'contacts', select:'photo username email'}
 });
-module.exports.getUser = createHandlerFor.getOne(User,{message:'user successfully sent',populate:{path: 'contacts', select:'photo username'}});
-module.exports.getUsers = createHandlerFor.getMany(User,{message: 'users sent !!',populate:{path: 'contacts', select:'photo username'}});
+module.exports.getUser = createHandlerFor.getOne(User,{message:'user successfully sent',populate:{path: 'contacts', select:'photo username email'}});
+module.exports.getUsers = createHandlerFor.getMany(User,{message: 'users sent !!',populate:{path: 'contacts', select:'photo username email'}});
 module.exports.postUser = createHandlerFor.postOne(User,{message:'user created successfully'});
 module.exports.patchUser = createHandlerFor.patchOne(User,{message:'changes saved succesfully'});
 module.exports.deleteUser = createHandlerFor.deleteOne(User,{message: 'user deleted succesfully'});
