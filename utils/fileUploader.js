@@ -4,7 +4,7 @@ const multer = require('multer');
 
 const appStorage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, './../static/img')
+        callback(null, './../static/img/profile-images')
     },
     filename:(req, file, callback) =>{
         console.log(file);
@@ -26,25 +26,32 @@ const appStorage = multer.diskStorage({
     }
 });
 
-module.exports.upload = multer({storage: appStorage });
 
 
 
 // image handling using sharp module... (dropped after using MEAN stack)
-// async function imageResizing(req, res, next){
-//     try {    
-//         if (!req.file) return next();
-//         req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`;      
-//         await sharp(req.file.buffer)
-//         .resize(200,200)
-//         .toFormat('jpeg')
-//         .jpeg({quality: 90})
-//         .toFile(path.join(__dirname,'../../static/img',req.file.filename));
-//         next();
-//     } catch (error) {
-//         return new AppError('oops....',500);
-//     }
-// };
+async function imageResizing(req, res, next){
+    try {    
+        if (!req.file) return next();
+        req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`;      
+        await sharp(req.file.buffer)
+        .resize(200,200)
+        .toFormat('jpeg')
+        .jpeg({quality: 90})
+        .toFile(path.join(__dirname,'../../static/img',req.file.filename));
+        next();
+    } catch (error) {
+        return new AppError('oops....',500);
+    }
+};
+
+module.exports.upload = multer({storage: appStorage });
+module.exports.imageResize = imageResizing;
+
+
+
+
+
 // async function multipleImagesResizing(req, res, next){
 //     if (!req.files) return next();
 //     //1) single image field

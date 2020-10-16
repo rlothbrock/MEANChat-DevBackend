@@ -5,3 +5,4 @@ config.env
 /utils/error.handling/combined.log
 /logs/uncaught-exceptions.log
 /logs/combined.log
+static/profile-images/
