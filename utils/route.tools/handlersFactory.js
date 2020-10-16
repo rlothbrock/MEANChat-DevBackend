@@ -39,13 +39,13 @@ module.exports.patchOne = (Model,options) => catchAsync(async (req, res, next)=>
 });
 
 module.exports.getOne = (model, options) => catchAsync(async (req, res, next)=>{
-    let resource;
+    const  _resource = model.findById(req.params.id);
     if (!options.message) options.message = 'resource sent'
     if (!options.populate){  
-        resource = await model.findById(req.params.id);
+        resource = await _resource;
     }
     if (options.populate){
-        resource = await model.findById(req.params.id).populate({
+        resource = await _resource.populate({
             path: options.populate.path,
             select: options.populate.select
         });

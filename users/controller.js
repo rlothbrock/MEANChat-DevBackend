@@ -54,7 +54,7 @@ async function profileUpdating(req, res, next){
         req.user._id,
         filtered,
         {runValidators: true, new:true}
-    );
+    ).populate('contacts','username email photo');
 
     if (!updatedUser) return next(notFoundError);
 
