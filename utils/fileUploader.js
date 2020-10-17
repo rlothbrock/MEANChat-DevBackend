@@ -1,13 +1,13 @@
 const sharp = require('sharp');
 const path = require('path');
 const multer = require('multer');
+const AppError = require('./../utils/error.handling/appError')
 
 const appStorage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, './../static/img/profile-images')
+        callback(null, 'static/profile-images')
     },
     filename:(req, file, callback) =>{
-        console.log(file);
         let extension = '';
         switch (file.mimetype) {
             case 'image/gif':
@@ -32,15 +32,18 @@ const appStorage = multer.diskStorage({
 // image handling using sharp module... (dropped after using MEAN stack)
 async function imageResizing(req, res, next){
     try {    
-        if (!req.file) return next();
-        req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`;      
-        await sharp(req.file.buffer)
+        if (!req.file) {
+            console.log('retornando en !req.file')
+            return next()};
+        await sharp(req.file[0].buffer)
         .resize(200,200)
         .toFormat('jpeg')
         .jpeg({quality: 90})
-        .toFile(path.join(__dirname,'../../static/img',req.file.filename));
+        .toFile(path.join(__dirname,'../../static/img',req.file[0].filename));
         next();
     } catch (error) {
+        console.log('error on resizing image');
+        console.log(error);
         return new AppError('oops....',500);
     }
 };

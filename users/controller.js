@@ -45,10 +45,11 @@ async function passwordUpdating(req, res, next){
     })
 };
 async function profileUpdating(req, res, next){
+    console.log('body a la entrada:',req.body);
     // not allowed for password role or email, or any other sensitive field
     if (req.body.password || req.body.role || req.body.email ) return next(illegalDataError)
     let filtered = bodyFilter(req,'username', 'photo');
-    if (req.file) filtered.photo = req.file.name;
+    if (req.file) filtered.photo = req.file.filename;
     
     const updatedUser = await User.findByIdAndUpdate(
         req.user._id,

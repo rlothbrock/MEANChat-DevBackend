@@ -31,7 +31,8 @@ route
 
 route
 .route('/Me/profile')
-.patch(upload.single('file'),imageResize,profileUpdating)
+.patch(upload.single('file'),profileUpdating)
+// .patch(upload.single('file'),imageResize,profileUpdating)
 .delete(profileDeleting)
 
 route
