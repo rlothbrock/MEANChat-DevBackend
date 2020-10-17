@@ -6,3 +6,5 @@ config.env
 /logs/uncaught-exceptions.log
 /logs/combined.log
 static/profile-images/
+!static/profile-images/user-default.png
+static/img/
