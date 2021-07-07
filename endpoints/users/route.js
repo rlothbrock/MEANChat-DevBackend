@@ -1,22 +1,15 @@
 const express = require('express');
 const route = express.Router()
-
-
-const { joiSchema } = require('./schema')
-const { 
+const {
     getUser, getUsers,
     postUser, patchUser, 
     getMe, useTokenForSetParams, 
     deleteUser, passwordUpdating,
     profileUpdating, profileDeleting, contactsUpdating, contactsDeleting
 } = require('./controller');
-const {paramValidator} = require('../../core/middleware/param-validator');
-const { bodyValidator } = require('../../core/middleware/body-validator');
 const { routeGuard, allowOnly } = require('../../core/middleware/route-guard-middle');
 const { upload } = require('../../tools/fileUploader');
 
-
-route.param('id',paramValidator)
 
 route.use(routeGuard); // all routes below require a logged user
 
@@ -46,7 +39,7 @@ route.use(allowOnly('admin'))  // all routes below are only for administration p
 route
 .route('/')
 .get(getUsers)
-.post(bodyValidator(joiSchema),postUser)
+.post(postUser)
 
 route
 .route('/:id')
