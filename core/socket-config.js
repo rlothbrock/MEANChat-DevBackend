@@ -15,6 +15,5 @@ module.exports.socketConfig = (socket)=>{
         socket.broadcast.emit('message-broadcast',msg)
     })
 
-   // socket.to('game').emit('nice game', "let's play a game");
 
 }
