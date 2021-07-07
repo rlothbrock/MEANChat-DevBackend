@@ -1,12 +1,12 @@
 
-require('./utils/error.handling/unc-except-logger');
+require('./tools/error.handling/unc-except-logger');
 const dotenv = require('dotenv');
 dotenv.config({path: './config.env'});
-const app = require('./app');
+const app = require('./core/app');
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const { socketConfig } = require('./socket-config');
-require('./db-connection');
+const { socketConfig } = require('./core/socket-config');
+require('./core/db-connection');
 const PORT  = process.env.PORT || 3000;
 io.on('connection',socketConfig);
 

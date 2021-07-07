@@ -6,57 +6,6 @@
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
-
-const joiUserSchema = Joi.object({
-    username:Joi.string()
-    .required()
-    .trim()
-    .min(3)
-    .max(25),
-    email:Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-    .trim()
-    .required(),
-    password: Joi.string()
-    .required()
-    .min(8)
-    .max(100)
-    .trim(),
-    role:Joi.string()
-    .trim()
-    
-});
-
-const joiRecoverSchema = Joi.object({
-    email:Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-    .trim()
-    .required(),
-})
-
-const joiLoginSchema = Joi.object({
-    email:Joi.string()
-    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-    .trim()
-    .required(),
-    password: Joi.string()
-    .required()
-    .min(8)
-    .max(20)
-    .trim()
-})
-
-const joiContactsArraySchema = Joi.object({
-    newContacts: Joi.array().min(1)
-});
-const joiSchema = Joi.alternatives([
-    joiUserSchema,
-    joiLoginSchema,
-    joiRecoverSchema,
-    joiContactsArraySchema])
-
 
 const userSchema = new mongoose.Schema({
     photo:{
@@ -74,8 +23,8 @@ const userSchema = new mongoose.Schema({
     username:{
         type: String,
         required: [true,'a username is required'],
-        minlength: [3,'username too short, please use a 3 to 20 charachters username'],
-        maxlength: [20,'username too long, please use a 3 to 20 charachters username'],
+        minlength: [3,'username too short, please use a 3 to 20 characters username'],
+        maxlength: [20,'username too long, please use a 3 to 20 characters username'],
     },
     email:{
         type: String,
@@ -92,8 +41,8 @@ const userSchema = new mongoose.Schema({
         type:String,
         // select:false,   use this prop for avoiding password to show  
         required: [true,'a password is required'],
-        minlength:[8,'password too short, please use a 8 to 100 charachters password'],
-        maxlength:[100,'password too long, please use a 8 to 100 charachters password'],
+        minlength:[8,'password too short, please use a 8 to 100 characters password'],
+        maxlength:[100,'password too long, please use a 8 to 100 characters password'],
         validate:{
             validator:(input)=>{
                 return /\d+/.test(input) && /[A-Z]+/.test(input) && /[a-z]+/.test(input) &&  /\W+/.test(input) && !/\s+/.test(input)
@@ -119,48 +68,15 @@ const userSchema = new mongoose.Schema({
 
 })
 
-// UserSchema.statics.countContacts = async function (userId) {
-//     const popularity = await this.aggregate([  // ver video 22 seccion 11
-//         { 
-//             $match : { user: userId } 
-//         },
-//         { 
-//             $group:{
-//                   _id: '$user', 
-//                   nContacts: { $sum: 1 },
-//             },
-            
-//         }
-//     ])
-//     if(popularity.length > 0){
-//         await this.findByIdAndUpdate(userId,{
-//             nContacts: popularity[0].nContacts
-//         }) 
-//     }  
-// };
-
-// UserSchema.post('save', async function(){
-//     this.constructor.countContacts(this._id)
-// });
-
-// UserSchema.pre(/^findOneAnd/,async function(next){
-//     this.temp = await User.findOne();
-//     next()
-// })
-
-// UserSchema.post(/^findOne/,async function(){
-//     await this.temp.constructor.countContacts(this.temp._id)
-// })
-
 userSchema.methods.verifyPassword = async function(candidate){
     return await bcrypt.compare(candidate, this.password)
 };
-userSchema.methods.hasSamePasswordSince = async function(timestamp){ 
+userSchema.methods.hasSamePasswordSince = async function(timestamp){
     // timestamp must be multiplied by 1000 if used the default iat when constructing tokens
-        if (this.passwordChangedAt){
-            const lastChangeAt = this.passwordChangedAt.getTime()
+        if (this["passwordChangedAt"]){
+            const lastChangeAt = this["passwordChangedAt"].getTime()
             return (lastChangeAt <= timestamp*1000);
-        };
+        }
         return true
 };
 userSchema.methods.createResetToken = function(){
@@ -172,9 +88,6 @@ userSchema.methods.createResetToken = function(){
 };
 
 userSchema.statics.manageContacts = async function(id, emails,options){
-    // const condition = emails.map(element => { 
-    //     return { email : { $eq: element } } 
-    // });
     let newContacts = await this.aggregate([
         {
             // $match: { $or : condition }
@@ -207,7 +120,6 @@ userSchema.statics.manageContacts = async function(id, emails,options){
           runValidators: true
         })
     }
-   return 
 }
 
 
@@ -227,6 +139,5 @@ userSchema.pre(/^find/,function(next){
 
 const User = mongoose.model('User',userSchema);
 
-module.exports.joiSchema = joiSchema;
 module.exports.User = User;
 

@@ -1,8 +1,8 @@
-const AppError = require("../utils/error.handling/appError");
+const AppError = require("../../tools/error.handling/appError");
 
-const { User } = require('../users/schema'); 
-const { catchAsync } = require('../utils/error.handling/catchAsync');
-const { jwtSign } = require('../utils/route.tools/jwtHandler');
+const { User } = require('../users/schema');
+const { catchAsync } = require('../../tools/error.handling/catchAsync');
+const { jwtSign } = require('../../tools/routing/jwtHandler');
 
 function sendToken(user, statusCode, res) {
     const token = jwtSign(user._id);

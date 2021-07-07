@@ -25,4 +25,4 @@ module.exports.createMessage = async function(req, res, next){
             data:{error}
         })
     }
-};
+}

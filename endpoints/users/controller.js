@@ -2,14 +2,16 @@ const {promisify} = require('util');
 const jwt = require('jsonwebtoken');
 
 
-const AppError = require('../utils/error.handling/appError');
-const badRequestError = require('./../utils/error.handling/_400');
-const createHandlerFor = require('../utils/route.tools/handlersFactory');
-const {jwtSign} = require('../utils/route.tools/jwtHandler');
+const AppError = require('../../tools/error.handling/appError');
+const badRequestError = require('../../tools/error.handling/_400');
+const createHandlerFor = require('../../tools/routing/handlersFactory');
+const {notFoundError} = require("../../tools/error.handling/_400");
+const {lackOfPermissionsError} = require("../../tools/error.handling/_400");
+const {illegalDataError} = require("../../tools/error.handling/_400");
+const {jwtSign} = require('../../tools/routing/jwtHandler');
 const { User } = require('./schema');
-const { catchAsync } = require('../utils/error.handling/catchAsync');
-const { bodyFilter } = require('../utils/route.tools/bodyFilter');
-const { upload } = require('../utils/fileUploader');
+const { catchAsync } = require('../../tools/error.handling/catchAsync');
+const { bodyFilter } = require('../../tools/routing/bodyFilter');
 
 
 
@@ -18,12 +20,12 @@ async function passwordUpdating(req, res, next){
     const { oldPassword, updatedPassword } = req.body;
     if(!oldPassword || !updatedPassword || (oldPassword === updatedPassword) ) {
         return next(new AppError('Invalid input, please provide both the current and new password. Don\'t use the same ',400))
-    };
+    }
     
     let token = null;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
         token = req.headers.authorization.split(' ')[1]
-    };
+    }
     if (!token) return next(lackOfPermissionsError);
     
     const payload = await promisify(jwt.verify)(token,process.env.JWT_KEY);
@@ -40,9 +42,8 @@ async function passwordUpdating(req, res, next){
         status:'success',
         token: newToken
     })
-};
+}
 async function profileUpdating(req, res, next){
-    console.log('body a la entrada:',req.body);
     // not allowed for password role or email, or any other sensitive field
     if (req.body.password || req.body.role || req.body.email ) return next(illegalDataError)
     let filtered = bodyFilter(req,'username', 'photo');
@@ -61,7 +62,7 @@ async function profileUpdating(req, res, next){
         data:{data: updatedUser},
         message: 'user successfully updated'
     })
-};
+}
 async function profileDeleting(req, res, next){
     await User.findByIdAndUpdate(req.user._id,{active: false});
     
@@ -69,7 +70,7 @@ async function profileDeleting(req, res, next){
         status: 'success',
         message:'account successfully removed'
     })
-};
+}
 function useTokenForSetParams(req, res, next){
     req.params.id = req.user._id
     next()
@@ -123,5 +124,5 @@ module.exports.getMe = createHandlerFor.getOne(User,{
 module.exports.getUser = createHandlerFor.getOne(User,{message:'user successfully sent',populate:{path: 'contacts', select:'photo username email'}});
 module.exports.getUsers = createHandlerFor.getMany(User,{message: 'users sent !!',populate:{path: 'contacts', select:'photo username email'}});
 module.exports.postUser = createHandlerFor.postOne(User,{message:'user created successfully'});
-module.exports.patchUser = createHandlerFor.patchOne(User,{message:'changes saved succesfully'});
-module.exports.deleteUser = createHandlerFor.deleteOne(User,{message: 'user deleted succesfully'});
+module.exports.patchUser = createHandlerFor.patchOne(User,{message:'changes saved successfully'});
+module.exports.deleteUser = createHandlerFor.deleteOne(User,{message: 'user deleted successfully'});

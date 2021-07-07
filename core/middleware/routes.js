@@ -1,7 +1,7 @@
-const users = require('../users/route');
-const auth = require('../auth/route');
-const rooms = require('../rooms/route');
-const messages = require('../messages/route');
+const users = require('../../endpoints/users/route');
+const auth = require('../../endpoints/auth/route');
+const rooms = require('../../endpoints/rooms/route');
+const messages = require('../../endpoints/messages/route');
 
 
 

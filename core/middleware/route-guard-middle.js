@@ -2,20 +2,20 @@ const { promisify } = require('util');
 const jwt = require("jsonwebtoken");
 const crypto = require('crypto');
 
-const { catchAsync } = require("../utils/error.handling/catchAsync");
-const AppError = require("../utils/error.handling/appError");
-const { User } = require('../users/schema');
-const {sendEmail} = require('../utils/mailer');
-const { jwtSign } = require('../utils/route.tools/jwtHandler');
+const { catchAsync } = require("../../tools/error.handling/catchAsync");
+const AppError = require("../../tools/error.handling/appError");
+const { User } = require('../../endpoints/users/schema');
+const {sendEmail} = require('../../tools/mailer');
+const { jwtSign } = require('../../tools/routing/jwtHandler');
 
-async function routeGuard(req, res, next){
+async function routeGuardFunc(req, res, next){
     // the err message is the same on purpose
     const getTheF_Out = new AppError('Invalid or Inexistent credentials',401);
 
     let token = null;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
         token = req.headers.authorization.split(' ')[1]
-    };
+    }
     if (!token) return next(getTheF_Out );
     
     const payload = await promisify(jwt.verify)(token,process.env.JWT_KEY);
@@ -25,18 +25,18 @@ async function routeGuard(req, res, next){
     if ( ! user.hasSamePasswordSince(payload.iat) )return next( getTheF_Out ); 
     req.user = user; // further use...
     next(); 
-};
+}
 
-function allowOnly( ...roles ){
+function allowOnlyFunc( ...roles ){
     return ( req, res, next)=>{
         if ( !roles.includes(req.user.role) ){
             return next(new AppError('Access Denied!! Not enough permissions',403))
         }
         return next();
     }    
-};
+}
 
-async function passwordForgotten(req, res, next) {
+async function passwordForgottenFunc(req, res, next) {
     const email  = req.body.email;
     if (!email) return next(new AppError('please provide a valid email',400));
     
@@ -69,15 +69,14 @@ async function passwordForgotten(req, res, next) {
         })
 
     }catch(error){
-        user.resetToken = undefined,
-        user.resetTokenExpiration = undefined,
-
+        user.resetToken = undefined;
+        user.resetTokenExpiration = undefined;
         await user.save();
         return next(new AppError(`${error.message}`,500));
     }
-};
+}
 
-async function passwordRecovery(req, res, next) {
+async function passwordRecoveryFunc(req, res, next) {
     const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
     const user = await User.findOne( {resetToken: hashedToken, resetTokenExpiration: { $gt: Date.now() } } );
     //the expiration is tested on the query.
@@ -97,9 +96,9 @@ async function passwordRecovery(req, res, next) {
     });
 
 
-};
+}
 
-module.exports.routeGuard = catchAsync(routeGuard)
-module.exports.allowOnly = allowOnly
-module.exports.passwordForgotten = catchAsync(passwordForgotten)
-module.exports.passwordRecovery = catchAsync(passwordRecovery)
+module.exports.routeGuard = catchAsync(routeGuardFunc)
+module.exports.allowOnly = allowOnlyFunc
+module.exports.passwordForgotten = catchAsync(passwordForgottenFunc)
+module.exports.passwordRecovery = catchAsync(passwordRecoveryFunc)

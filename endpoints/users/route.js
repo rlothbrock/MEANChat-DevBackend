@@ -10,10 +10,10 @@ const {
     deleteUser, passwordUpdating,
     profileUpdating, profileDeleting, contactsUpdating, contactsDeleting
 } = require('./controller');
-const {paramValidator} = require('../middleware/param-validator');
-const { bodyValidator } = require('../middleware/body-validator');
-const { routeGuard, allowOnly } = require('../middleware/route-guard-middle');
-const { upload, imageResize } = require('./../utils/fileUploader'); 
+const {paramValidator} = require('../../core/middleware/param-validator');
+const { bodyValidator } = require('../../core/middleware/body-validator');
+const { routeGuard, allowOnly } = require('../../core/middleware/route-guard-middle');
+const { upload } = require('../../tools/fileUploader');
 
 
 route.param('id',paramValidator)

@@ -21,6 +21,6 @@ async function sendEmail(settings){
     }
 
     await transport.sendMail(mailOptions);
-};
+}
 
 module.exports.sendEmail = sendEmail

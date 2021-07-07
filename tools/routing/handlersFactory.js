@@ -1,5 +1,5 @@
+const {notFoundError} = require("../error.handling/_400");
 const { catchAsync } = require("../error.handling/catchAsync");
-const { options } = require("joi");
 
 
 module.exports.deleteOne = (Model,options) => catchAsync(async (req, res, next)=>{
@@ -19,7 +19,7 @@ module.exports.deleteOne = (Model,options) => catchAsync(async (req, res, next)=
 
 module.exports.patchOne = (Model,options) => catchAsync(async (req, res, next)=>{
     // use only for not sensitive data...
-    if (!options.message) options.message = 'updated succesfully'
+    if (!options.message) options.message = 'updated successfully'
     const docPatched = await Model.findByIdAndUpdate(
         req.params.id,req.body,
         {runValidators: true,new:true}
@@ -38,6 +38,7 @@ module.exports.patchOne = (Model,options) => catchAsync(async (req, res, next)=>
 
 module.exports.getOne = (model, options) => catchAsync(async (req, res, next)=>{
     const  _resource = model.findById(req.params.id);
+    let resource = null
     if (!options.message) options.message = 'resource sent'
     if (!options.populate){  
         resource = await _resource;
@@ -49,13 +50,13 @@ module.exports.getOne = (model, options) => catchAsync(async (req, res, next)=>{
         });
     } 
     if (!resource) next(notFoundError);
-        return res.status(200).json({
-            status:'succes',
-        data:{
-            data: resource
-        },
-        message:options.message
-        })
+    return res.status(200).json({
+        status:'succes',
+    data:{
+        data: resource
+    },
+    message:options.message
+    })
 
 });
 
@@ -63,7 +64,7 @@ module.exports.getMany = (Model,options) => catchAsync(async (req, res, next )=>
     if(!options.message) options.message = 'all coincidences sent'
     const docs = await Model.find().select('-__v');
     return res.status(200).json({
-        status:'succes',
+        status:'success',
         data:{data: docs},
         message: options.message
     })

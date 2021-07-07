@@ -1,6 +1,6 @@
 // this endpoints are not yet implemented
 const express = require('express');
-const { getAllMessages, createMessage } = require('./controller');
+const { getAllMessages} = require('./controller');
 
 const Router = express.Router();
 
