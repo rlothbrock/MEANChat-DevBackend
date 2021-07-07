@@ -1,10 +1,37 @@
 this server implements real time communication using socket.io
 
-APIS:
-auth:
+####Endpoints
+__router__:  domain/api/v1
+- auth
+    - this endpoint uses the "user" route
+    - resources
+        - login : /login
+            -   requires:
+                - username: (todo: write requirements)
+                - password: (todo: write requirements)
+        - signup : /new-user
+            - requires
+                - username: (todo: write requirements)
+                  - email: (todo: write requirements)
+                  - password: (todo: write requirements)
+                  - role* (only on dev phase): (todo: write requirements)
+
+        - help on forgot password : /recovery
+        - reset password : /reset-password/:token
+- users
+    
+- rooms
+- messages
 
 -----------
 dev notes:
+
+###__Tasks__: 
+- implement validation on  requests
+- implement email sending
+- implement endpoints test
+    
+
 
 esquema de las rooms:
 miembros: [ObjectId] // child reference
