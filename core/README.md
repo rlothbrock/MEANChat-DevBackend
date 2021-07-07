@@ -1,23 +1,33 @@
-this server implements real time communication using socket.io
+##simple server for a MEAN chat application
+This server implements real time communication using __socket.io__
+. Implements authentication using __jwt__
+and implements REST APIs using __Express__
+. Also uses __mongoose__ for defining schemas and 
+__mongoDB__ for data store
+
+#####Any Comments to:
+rlothbrock.10@gmail.com
+
+
 
 ####Endpoints
 __router__:  domain/api/v1
 - auth
-    - this endpoint uses the "user" route
+    - this endpoint uses the route : /portal
     - resources
-        - login : /login
+        - login : _POST_ `/login`
             -   requires:
-                - username: (todo: write requirements)
+                - email: (todo: write requirements)
                 - password: (todo: write requirements)
-        - signup : /new-user
+        - signup : _POST_ `/new-user`
             - requires
                 - username: (todo: write requirements)
                   - email: (todo: write requirements)
                   - password: (todo: write requirements)
                   - role* (only on dev phase): (todo: write requirements)
 
-        - help on forgot password : /recovery
-        - reset password : /reset-password/:token
+        - help on forgot password : `/recovery`
+        - reset password : `/reset-password/:token`
 - users
     
 - rooms
@@ -49,7 +59,7 @@ APIS: /api/v1
 api response on production: json {
 	status: string ('success'| 'fail' | 'error')
 		fail: 	operational errors
-		error: 	non operational errors
+		error: 	non-operational errors
 	data: 		{ data: object}
 	message?: 	string
 	count?: 	number  -> number of docs on data 

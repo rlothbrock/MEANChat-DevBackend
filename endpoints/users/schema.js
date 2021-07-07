@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
             validator:(input)=>{
                 return /^.{3,25}@\w{3,10}.[a-z]{2,6}(.[a-z]{2,3})?$/.test(input)
             },
-            message:'invalid email, please check your typo'
+            message:'invalid email, please check your input'
         }
     },
     password:{

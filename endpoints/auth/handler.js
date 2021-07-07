@@ -4,7 +4,7 @@ const { User } = require('../users/schema');
 const { catchAsync } = require('../../tools/error.handling/catchAsync');
 const { jwtSign } = require('../../tools/routing/jwtHandler');
 
-function sendToken(user, statusCode, res) {
+function sendCookie(user, statusCode, res) {
     const token = jwtSign(user._id);
     const cookieExpiration = new Date(Date.now() + process.env.JWT_COOKIE_EXPIRATION *24*3600*1000);
     const cookieOptions = {
@@ -27,9 +27,10 @@ async function signupHandler(req, res, next){
         password: req.body.password ,
         role: req.body.role
     });
-    
-    return sendToken(newUser,201,res);
+    console.log(`new user: ${newUser}`)
+    return sendCookie(newUser,201,res);
 }
+
 async function loginHandler(req, res, next){
     const { email, password } = req.body;
 
@@ -38,11 +39,12 @@ async function loginHandler(req, res, next){
         return next(error);
     }
     const user = await User.findOne({email});
+    console.log(`user:${user}`)
     if (!user || !(await user.verifyPassword(password)) ){
         const error = new AppError('invalid credentials',401);
         return next(error)
     }
-    return sendToken(user,200,res);
+    return sendCookie(user,200,res);
 }
 
 

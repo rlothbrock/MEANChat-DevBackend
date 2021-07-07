@@ -10,7 +10,7 @@ const { jwtSign } = require('../../tools/routing/jwtHandler');
 
 async function routeGuardFunc(req, res, next){
     // the err message is the same on purpose
-    const getTheF_Out = new AppError('Invalid or Inexistent credentials',401);
+    const getTheF_Out = new AppError('Unauthorized: Invalid or Nonexistent credentials',401);
 
     let token = null;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
