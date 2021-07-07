@@ -1,0 +1,47 @@
+{
+  "name": "meanchat-devbackend",
+  "version": "1.0.0",
+  "description": "simple chat app",
+  "main": "index.js",
+  "scripts": {
+    "start": " NODE_ENV=production nodemon index.js",
+    "start-dev": " NODE_ENV=development nodemon index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rlothbrock/MEANChat-DevBackend.git"
+  },
+  "author": "rlothbrock.10@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rlothbrock/MEANChat-DevBackend/issues"
+  },
+  "homepage": "https://github.com/rlothbrock/MEANChat-DevBackend#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-mongo-sanitize": "^2.1.0",
+    "express-rate-limit": "^5.3.0",
+    "helmet": "^4.6.0",
+    "hpp": "^0.2.3",
+    "joi": "^17.4.0",
+    "joi-objectid": "^3.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.6.2",
+    "sharp": "^0.28.3",
+    "socket.io": "^4.1.2",
+    "winston": "^3.3.3",
+    "winston-mongodb": "^5.0.7",
+    "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  }
+}
