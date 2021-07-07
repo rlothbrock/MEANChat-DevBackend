@@ -3,12 +3,9 @@ const jwt = require('jsonwebtoken');
 
 
 const AppError = require('../utils/error.handling/appError');
-const lackOfPermissionsError = require('../utils/error.handling/_401');
-const illegalDataError = require('../utils/error.handling/_400.illegal');
-const notFoundError = require('../utils/error.handling/_404');
 const badRequestError = require('./../utils/error.handling/_400');
 const createHandlerFor = require('../utils/route.tools/handlersFactory');
-const {tokenCreator} = require('../utils/route.tools/tokenCreator');
+const {jwtSign} = require('../utils/route.tools/jwtHandler');
 const { User } = require('./schema');
 const { catchAsync } = require('../utils/error.handling/catchAsync');
 const { bodyFilter } = require('../utils/route.tools/bodyFilter');
@@ -37,7 +34,7 @@ async function passwordUpdating(req, res, next){
     user.password = updatedPassword;
     await user.save();
 
-    const newToken = tokenCreator(user._id); 
+    const newToken = jwtSign(user._id);
 
     return res.status(200).json({
         status:'success',

@@ -6,7 +6,7 @@ const { catchAsync } = require("../utils/error.handling/catchAsync");
 const AppError = require("../utils/error.handling/appError");
 const { User } = require('../users/schema');
 const {sendEmail} = require('../utils/mailer');
-const { tokenCreator } = require('../utils/route.tools/tokenCreator');
+const { jwtSign } = require('../utils/route.tools/jwtHandler');
 
 async function routeGuard(req, res, next){
     // the err message is the same on purpose
@@ -89,7 +89,7 @@ async function passwordRecovery(req, res, next) {
 
     await user.save();
 
-    const token = tokenCreator(user._id);
+    const token = jwtSign(user._id);
     return res.status(200).json({
         status:'success',
         id:user._id,
