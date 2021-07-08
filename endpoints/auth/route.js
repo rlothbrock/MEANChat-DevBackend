@@ -1,6 +1,6 @@
 const express = require('express');
 const { signup, signin } = require('./handler');
-const { passwordForgotten, passwordRecovery } = require('../../core/middleware/route-guard-middle');
+const { passwordForgotten, passwordRecovery } = require('../../core/middleware/route-guard');
 
 
 const route = express.Router();

@@ -7,7 +7,7 @@ const {
     deleteUser, passwordUpdating,
     profileUpdating, profileDeleting, contactsUpdating, contactsDeleting
 } = require('./controller');
-const { routeGuard, allowOnly } = require('../../core/middleware/route-guard-middle');
+const { routeGuard, allowOnly } = require('../../core/middleware/route-guard');
 const { upload } = require('../../tools/fileUploader');
 
 

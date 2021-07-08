@@ -13,7 +13,7 @@ rlothbrock.10@gmail.com
 ####Endpoints
 __router__:  domain/api/v1
 - auth
-    - this endpoint uses the route : /portal
+    - this endpoint uses the route : `/portal`
     - resources
         - login : _POST_ `/login`
             -   requires:

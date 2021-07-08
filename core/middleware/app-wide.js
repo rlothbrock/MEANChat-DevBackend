@@ -8,13 +8,13 @@ const path = require('path');
 const cors = require('cors');
 
 const { wildcardHandler } = require('../../tools/routing/wildcard')
-const { errHandler } = require('./err-global-middle');
+const { errHandler } = require('./error-global');
 
 module.exports = function(application){
     application.use(cors())
     application.use(helmet());
     if (process.env.NODE_ENV === 'development'){application.use(morgan('dev'))}
-    application.use('/api',require('./request-limit-middle'));
+    application.use('/api',require('./req-limit'));
     application.use(express.json());
     application.use(express.static(path.join(__dirname,'..','static')))
     application.use(mongoSanitize());
