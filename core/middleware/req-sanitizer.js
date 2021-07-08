@@ -32,6 +32,12 @@ module.exports.bodySanitizer = async function (req, res, next){
             .escape()
             .run(req)
     }
+    if (req.body['role']){
+        console.log('sanitizing role')
+        await body('role')
+            .replace(['admin'], 'user')
+            .run(req)
+    }
     next()
 }
 

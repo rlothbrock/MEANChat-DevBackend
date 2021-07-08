@@ -33,7 +33,7 @@ async function signUpValidatorFunc(req, res, next){
         .isLength({min: 5, max: 50})
         .withMessage(username_msg)
         .isAlphanumeric()
-        .withMessage('Use only alphanumeric Characters a-z A-Z 0-9 _')
+        .withMessage('Use only alphanumeric Characters a-z A-Z 0-9')
         .run(req);
     await body('email')
         .isEmail().withMessage('email is not valid, please check your input')
