@@ -6,6 +6,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const hpp = require('hpp');
 const path = require('path');
 const cors = require('cors');
+const {bodySanitizer} = require("./req-sanitizer");
 
 const { wildcardHandler } = require('../../tools/routing/wildcard')
 const { errHandler } = require('./error-global');
@@ -20,9 +21,10 @@ module.exports = function(application){
     application.use(mongoSanitize());
     application.use(xssClean());
     application.use(hpp({}));
-    
+
+    application.use(bodySanitizer)
     require('./routes')(application);
     application.use('*',wildcardHandler)
-    application.use(errHandler) 
+    application.use(errHandler)
 }
 

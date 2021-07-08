@@ -1,5 +1,5 @@
-##simple server for a MEAN chat application
-This server implements real time communication using __socket.io__
+## MEAN Chat Server
+This is a express server that implements real time communication using __socket.io__
 . Implements authentication using __jwt__
 and implements REST APIs using __Express__
 . Also uses __mongoose__ for defining schemas and 
@@ -37,7 +37,6 @@ __router__:  domain/api/v1
 dev notes:
 
 ###__Tasks__: 
-- implement validation on  requests
 - implement email sending
 - implement endpoints test
     

@@ -10,16 +10,16 @@ const password_msg = 'password should be 12 characters at least,and must have nu
 
 
 async function loginValidatorFunc(req, res, next){
-
-
-
-    await body('email',email_msg)
+    await body('email')
         .isEmail().bail()
+        .withMessage(email_msg)
         .run(req)
-    await body('password',password_msg)
+    await body('password')
         .isStrongPassword(
             {minLowercase:1,minLength:12,minNumbers:1,minSymbols:1,minUppercase:1}
-        ).run(req)
+        )
+        .withMessage(password_msg)
+        .run(req)
     const errors = validationResult(req)
     if (!errors.isEmpty()){
         return Promise.reject(errors.array())
@@ -29,16 +29,19 @@ async function loginValidatorFunc(req, res, next){
     }
 }
 async function signUpValidatorFunc(req, res, next){
-    await body('username',username_msg)
+    await body('username')
         .isLength({min: 5, max: 50})
+        .withMessage(username_msg)
         .isAlphanumeric()
+        .withMessage('Use only alphanumeric Characters a-z A-Z 0-9 _')
         .run(req);
-    await body('email',email_msg)
-        .isEmail().bail()
+    await body('email')
+        .isEmail().withMessage('email is not valid, please check your input')
+        .bail()
         .custom(async value => {
             const matches = await User.findOne({'email': value}).countDocuments();
             if (matches > 0){
-                throw Error('email already exists')
+                throw Error(email_msg)
             }
         } )
         .run(req)
@@ -67,7 +70,6 @@ async function cookieValidatorFunc(req, res, next){
     }
 }
 async function paramValidatorFunc(req, res, next){
-        console.log('reading param_name:'+req.params.id)
         if (req.params.id) {
             await param('id').isMongoId().run(req)
         }
@@ -83,6 +85,7 @@ async function paramValidatorFunc(req, res, next){
         }
 }
 async function headerValidatorFunc(req, res, next){
+    // should test and implement
     await header('authorization').isHash("sha256")
     const errors = validationResult(req)
     if (!errors.isEmpty()){
