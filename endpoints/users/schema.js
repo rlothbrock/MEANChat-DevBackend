@@ -23,8 +23,8 @@ const userSchema = new mongoose.Schema({
     username:{
         type: String,
         required: [true,'a username is required'],
-        minlength: [3,'username too short, please use a 3 to 20 characters username'],
-        maxlength: [20,'username too long, please use a 3 to 20 characters username'],
+        minlength: [5,'username too short, please use a 3 to 20 characters username'],
+        maxlength: [50,'username too long, please use a 3 to 20 characters username'],
     },
     email:{
         type: String,
@@ -41,8 +41,8 @@ const userSchema = new mongoose.Schema({
         type:String,
         // select:false,   use this prop for avoiding password to show  
         required: [true,'a password is required'],
-        minlength:[8,'password too short, please use a 8 to 100 characters password'],
-        maxlength:[100,'password too long, please use a 8 to 100 characters password'],
+        minlength:[12,'password too short, please use a 12 to 100 characters password'],
+        maxlength:[100,'password too long, please use a 12 to 100 characters password'],
         validate:{
             validator:(input)=>{
                 return /\d+/.test(input) && /[A-Z]+/.test(input) && /[a-z]+/.test(input) &&  /\W+/.test(input) && !/\s+/.test(input)
