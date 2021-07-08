@@ -7,7 +7,7 @@
 const {catchAsync} = require('./../../tools/error.handling/catchAsync')
 const {validationResult} = require("express-validator");
 const {User} = require("../../endpoints/users/schema");
-const {body, cookie, header, query} = require("express-validator");
+const {body, cookie, header, param} = require("express-validator");
 
 const username_msg = 'username should be 5 to 50 alphanumeric Characters'
 const email_msg = 'please use a unique and valid email'
@@ -72,13 +72,13 @@ async function cookieValidatorFunc(req, res, next){
         next()
     }
 }
-async function paramValidatorFunc(param_name){
-    return catchAsync(async (req, res, next)=>{
-        if (param_name === 'id') {
-            await query(param_name).isMongoId().run(req)
+async function paramValidatorFunc(req, res, next){
+        console.log('reading param_name:'+req.params.id)
+        if (req.params.id) {
+            await param('id').isMongoId().run(req)
         }
-        if (param_name === 'token') {
-            await query(param_name).isHash("sha256").run(req)
+        if (req.params.token) {
+            await param('token').isHash("sha256").run(req)
         }
         const errors = validationResult(req)
         if (!errors.isEmpty()){
@@ -87,7 +87,6 @@ async function paramValidatorFunc(param_name){
         else{
             next()
         }
-    })
 }
 async function headerValidatorFunc(req, res, next){
     await header('authorization').isHash("sha256")
@@ -104,4 +103,4 @@ module.exports.loginValidator = catchAsync(loginValidatorFunc)
 module.exports.signUpValidator = catchAsync(signUpValidatorFunc)
 module.exports.cookieValidator = catchAsync(cookieValidatorFunc)
 module.exports.headerValidator = catchAsync(headerValidatorFunc)
-module.exports.paramValidator = paramValidatorFunc
+module.exports.paramValidator = catchAsync(paramValidatorFunc)

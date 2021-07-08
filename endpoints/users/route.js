@@ -42,11 +42,12 @@ route
 .get(getUsers)
 .post(postUser)
 
+// .get(paramValidator,getUser)
 route
-.route('/:id')
-.get(paramValidator('id'),getUser)
-.patch(patchUser)
-.delete(deleteUser)
+    .route('/:id')
+    .get(paramValidator,getUser)
+    .patch(patchUser)
+    .delete(deleteUser)
 
 
 
