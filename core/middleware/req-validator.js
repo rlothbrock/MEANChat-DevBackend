@@ -89,7 +89,6 @@ async function paramValidatorFunc(param_name){
         }
     })
 }
-
 async function headerValidatorFunc(req, res, next){
     await header('authorization').isHash("sha256")
     const errors = validationResult(req)
