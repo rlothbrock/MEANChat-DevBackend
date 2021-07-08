@@ -40,6 +40,7 @@ dev notes:
 - implement email sending
 - implement endpoints test
 - implement contact me
+- delete all logs
 
 
 esquema de las rooms:

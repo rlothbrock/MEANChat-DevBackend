@@ -1,7 +1,7 @@
 const express = require('express');
 const {loginValidator} = require("../../core/middleware/req-validator");
 const {signUpValidator} = require("../../core/middleware/req-validator");
-const { signup, signin } = require('./handler');
+const { signup, signin } = require('./controller');
 const { passwordForgotten, passwordRecovery } = require('../../core/middleware/route-guard');
 
 
