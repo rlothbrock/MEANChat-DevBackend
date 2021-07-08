@@ -1,9 +1,3 @@
-/* todo create here validation middleware for:
-    params
-    body
-    divide attending to routes, even if it implies some duplication
-*/
-
 const {catchAsync} = require('./../../tools/error.handling/catchAsync')
 const {validationResult} = require("express-validator");
 const {User} = require("../../endpoints/users/schema");
