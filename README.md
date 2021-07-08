@@ -39,7 +39,7 @@ dev notes:
 ###__Tasks__: 
 - implement email sending
 - implement endpoints test
-    
+- implement contact me
 
 
 esquema de las rooms:

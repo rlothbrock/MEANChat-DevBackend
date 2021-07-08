@@ -1,6 +1,8 @@
+// not fully implemented until dev last phase
+
 const nodemailer = require('nodemailer');
 
-async function sendEmail(settings){
+module.exports.sendEmail = async function (settings){
     // settings: {email, subject, message}
     const transport  = nodemailer.createTransport({
         // if  service: 'Gmail',//must activate less secure apps access....
@@ -23,4 +25,3 @@ async function sendEmail(settings){
     await transport.sendMail(mailOptions);
 }
 
-module.exports.sendEmail = sendEmail
