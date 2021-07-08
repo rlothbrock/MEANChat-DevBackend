@@ -1,4 +1,5 @@
 const express = require('express');
+const {paramValidator} = require("../../core/middleware/req-validator");
 const route = express.Router()
 const {
     getUser, getUsers,
@@ -43,7 +44,7 @@ route
 
 route
 .route('/:id')
-.get(getUser)
+.get(paramValidator('id'),getUser)
 .patch(patchUser)
 .delete(deleteUser)
 

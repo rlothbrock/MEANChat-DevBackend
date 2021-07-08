@@ -4,7 +4,8 @@
   "description": "simple chat app",
   "main": "index.js",
   "scripts": {
-    "start": " NODE_ENV=production nodemon index.js",
+    "start": " NODE_ENV=production node index.js",
+    "test-prod": " NODE_ENV=production nodemon index.js",
     "start-dev": " NODE_ENV=development nodemon index.js",
     "dev": "NODE_ENV=development nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -9,8 +9,9 @@ tools/static/profile-images/
 !tools/static/profile-images/user-default.png
 tools/static/img/
 /logs/exceptions.log
-/.idea/sonarlint/issuestore/index.pb
+/.idea
 /.idea/MEANChat-DevBackend.iml
 /.idea/modules.xml
 /package-lock.json
 /.idea/vcs.xml
+/.idea/sonarlint/issuestore/4/a/4a10f4b5676bcdae14cc51a9147941007727709f
