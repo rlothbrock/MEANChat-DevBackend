@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const AppError = require('../../tools/error.handling/appError');
 const badRequestError = require('../../tools/error.handling/_400');
-const createHandlerFor = require('../../tools/routing/handlersFactory');
+const createHandlerFor = require('../../tools/routing/controllerFactory');
 const {notFoundError} = require("../../tools/error.handling/_400");
 const {lackOfPermissionsError} = require("../../tools/error.handling/_400");
 const {illegalDataError} = require("../../tools/error.handling/_400");
@@ -108,7 +108,6 @@ async function deleteContacts(req, res, next){
         data: {data: contacts}
     })
 }
-
 
 //catchAsync wraps the try-catch block logic
 module.exports.passwordUpdating = catchAsync(passwordUpdating);

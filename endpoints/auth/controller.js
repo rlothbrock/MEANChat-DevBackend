@@ -38,13 +38,13 @@ async function loginHandler(req, res, next){
         const error = new AppError('email and password are required',400);
         return next(error);
     }
-    const user = await User.findOne({email});
+    const user = await User.findOne({email}).select('+password');
     console.log(`user:${user}`)
     if (!user || !(await user.verifyPassword(password)) ){
         const error = new AppError('invalid credentials',401);
         return next(error)
     }
-    return sendCookie(user,200,res);
+    return sendCookie(user,201,res);
 }
 
 

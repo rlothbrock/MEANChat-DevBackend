@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
     },
     password:{
         type:String,
-        // select:false,   use this prop for avoiding password to show  
+        select:false,//   use this prop for avoiding password to show
         required: [true,'a password is required'],
         minlength:[12,'password too short, please use a 12 to 100 characters password'],
         maxlength:[100,'password too long, please use a 12 to 100 characters password'],
@@ -70,6 +70,14 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.verifyPassword = async function(candidate){
     return await bcrypt.compare(candidate, this.password)
+    // this method will fail if used as it is, since this.password is not available
+    // in schema,as it is flagged with select:false
+    // but the only place where this method is used, projects the query
+    // to include the password, so is still available and can be used
+    // I have commented this line just for explanation purposes
+    // The right way includes redefining the method to
+    // perform an extra query inside the method body including the password
+    // but so far that only adds extra querying to database and non extra benefits.
 };
 userSchema.methods.hasSamePasswordSince = async function(timestamp){
     // timestamp must be multiplied by 1000 if used the default iat when constructing tokens

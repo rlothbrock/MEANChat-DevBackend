@@ -1,4 +1,5 @@
 const express = require('express');
+const {passwordForgotten} = require("../../core/middleware/route-guard");
 const {paramValidator} = require("../../core/middleware/req-validator");
 const route = express.Router()
 const {
@@ -22,6 +23,7 @@ route
 route
 .route('/Me/password')
 .patch(passwordUpdating)
+.post(passwordForgotten)
 
 route
 .route('/Me/profile')
