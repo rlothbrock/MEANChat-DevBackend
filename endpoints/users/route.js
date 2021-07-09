@@ -1,5 +1,5 @@
 const express = require('express');
-const {passwordForgotten} = require("../../core/middleware/route-guard");
+const {updatePassValidator} = require("../../core/middleware/req-validator");
 const {paramValidator} = require("../../core/middleware/req-validator");
 const route = express.Router()
 const {
@@ -22,8 +22,7 @@ route
 
 route
 .route('/Me/password')
-.patch(passwordUpdating)
-.post(passwordForgotten)
+.patch(updatePassValidator,passwordUpdating)
 
 route
 .route('/Me/profile')

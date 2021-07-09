@@ -90,7 +90,7 @@ module.exports.loginValidator = catchAsync(async function (req, res, next){
 module.exports.signUpValidator = catchAsync(async function (req, res, next){
     await usernameValidator(req)
     await uniqueEmailValidator(req)
-    await passwordValidator(req)
+    await passwordValidator(req,'password')
     return resolveValidation(req,res, next)
 })
 module.exports.cookieValidator = catchAsync(async function (req, res, next){
