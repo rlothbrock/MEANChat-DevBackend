@@ -5,7 +5,7 @@ module.exports.bodySanitizer = async function (req, res, next){
     if (process.env.NODE_ENV === 'development') console.log('sanitizing input');
     if(req.body.email){
         await body('email')
-            .normalizeEmail({all_lowercase:true})
+            .normalizeEmail({all_lowercase:true, gmail_remove_dots:false})
             .run(req)
     }
     if(req.body.username){

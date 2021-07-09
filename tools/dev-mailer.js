@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
+const {catchAsync} = require("./error.handling/catchAsync");
 
-module.exports.processMail = async function (settings) {
+module.exports.sendDevMail = catchAsync(async function (settings) {
     // settings is a object that should have this fields
     // receivers, // list of receivers as a commma separated string of addresses
     // subjectText, // Subject line string
@@ -37,5 +38,5 @@ module.exports.processMail = async function (settings) {
     // Preview only available when sending through an Ethereal account
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-}
+})
 

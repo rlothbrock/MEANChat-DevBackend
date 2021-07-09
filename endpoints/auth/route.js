@@ -1,8 +1,9 @@
 const express = require('express');
+const {passwordRecovery} = require("./controller");
+const {passwordForgotten} = require("./controller");
 const {loginValidator} = require("../../core/middleware/req-validator");
-const {signUpValidator} = require("../../core/middleware/req-validator");
+const {signUpValidator, paramValidator} = require("../../core/middleware/req-validator");
 const { signup, signin } = require('./controller');
-const { passwordForgotten, passwordRecovery } = require('../../core/middleware/route-guard');
 
 
 const route = express.Router();
@@ -22,7 +23,7 @@ route
 
 route
 .route('/reset-password/:token')
-.patch(passwordRecovery)
+.post(paramValidator,passwordRecovery)
 
 
 module.exports = route;
