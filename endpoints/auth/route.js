@@ -23,7 +23,7 @@ route
 
 route
 .route('/reset-password/:token')
-.post(paramValidator,passwordRecovery)
+.patch(paramValidator,passwordRecovery)
 
 
 module.exports = route;

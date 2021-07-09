@@ -112,7 +112,6 @@ async function passwordRecoveryFunc(req, res, next) {
     const token = jwtSign(user._id);
     return res.status(200).json({
         status:'success',
-        id:user._id,
         token
     });
 
